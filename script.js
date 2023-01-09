@@ -76,22 +76,3 @@ function game() {
     }
 }
 
-/*    
-Rock Paper Scissors will be played in console against com
-
-    Use getComChoice() to randomly choose 'rock', 'paper', or 'scissors'
-        getComChoice() returns comSelection
-
-    Use playRound(comSelection, playerSelection) to compare and select winner
-        playRound() returns winner string
-
-    playerSelection should be case insensitive 
-        Implement regex
-
-    Use game() to call playRound 5 times 
-        game() tracks score and returns a winner or loser
-    
-    console.log() the results of each round 
-
-    Use prompt() to get playerSelection
-*/
