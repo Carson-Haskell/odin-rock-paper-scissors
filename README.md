@@ -3,4 +3,4 @@
 
 A simple Rock Paper Scissors game implemented using Javascript. In this project, I primarily furthered my knowledge of functions and how they work together.
 
-Let in the course, I will be returning to this project to improve and style it.
+Later in the course, I will be returning to this project to improve and style it.
