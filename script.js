@@ -1,78 +1,107 @@
-game();
+let playerScore = 0;
+let computerScore = 0;
+const result = document.querySelector('#result');
+const playerScoreBoard = document.querySelector('#player-score');
+const computerScoreBoard = document.querySelector('#computer-score');
+playerScoreBoard.textContent = `Player Score: ${playerScore.toString()}`;
+computerScoreBoard.textContent = `Computer Score: ${computerScore.toString()}`;
 
-// Get player choice
-function getPlayerChoice() {
-    let playerSelection;
-    do {
-        playerSelection = prompt("Please choose rock, paper, or scissors: ");
-        playerSelection = playerSelection.toLowerCase();
-    } while (playerSelection !== 'rock' && playerSelection !== 'paper' && playerSelection !== 'scissors');
+const playerChoiceButtons = document.querySelectorAll('.choice-button');
 
-    return playerSelection;
+playerChoiceButtons.forEach((button) => {
+  // Named function so that it can be removed
+  button.addEventListener('click', gameChoice);
+
+  button.addEventListener('transitionend', removeTransition);
+
+  // Named function so that it can be removed
+  button.addEventListener('mouseover', addHover);
+
+  button.addEventListener('mouseout', () => button.classList.remove('hover'));
+});
+
+if (playerScore === 5 || computerScore === 5) {
+  playerChoiceButtons.forEach((button) => {
+    button.removeEventListener('click', gameChoice);
+    button.removeEventListener('mouseover', addHover);
+  });
 }
 
-// Get random choice for computer 
-function getComChoice() {
-    const choices = ['rock', 'paper', 'scissors'];
-    let comSelection = choices[Math.floor(Math.random() * choices.length)];
+function gameChoice() {
+  playGame(getComChoice(), this.id);
+  this.classList.add('clicked');
+  this.classList.remove('hover');
+}
 
-    return comSelection;
+function addHover() {
+  this.classList.add('hover');
+}
+
+function removeTransition(e) {
+  if (e.propertyName !== 'transform') return;
+  this.classList.remove('clicked');
+}
+
+// Get random choice for computer
+function getComChoice() {
+  const choices = ['rock', 'paper', 'scissors'];
+  let comSelection = choices[Math.floor(Math.random() * choices.length)];
+
+  return comSelection;
 }
 
 // Compare computer choice with player choice
-function playRound(comSelection, playerSelection) {
-    alert(`Player's weapon of choice: ${playerSelection}\n\nComputer's weapon of choice: ${comSelection}\n\n...Determining Results...`);
-    if (playerSelection === comSelection) {
-        return 'Uh oh! Both players chose the same. No winner!';
-    } 
-    else if (playerSelection === 'rock') {
-       return comSelection === 'paper' ? 'Computer wins the round! Paper beats rock.' : 'Player wins the round! Rock beats scissors.';
-    } 
-    else if (playerSelection === 'paper') {
-       return comSelection === 'scissors' ? 'Computer wins the round! Scissors beats paper.' : 'Player wins the round! Paper beats rock.';
-    } 
-    else if (playerSelection === 'scissors') {
-        return comSelection === 'rock' ? 'Computer wins the round! Rock beats scissors.' : 'Player wins the round! Scissors beats paper.';
-    }
-}
-
-// Creates a game loop to play 5 rounds
-function game() {
-    let comScore = 0;
-    let playerScore = 0;
-
-    for (let i = 1; i <= 5; i++) {
-        let gameResult = playRound(getComChoice(), getPlayerChoice());
-        if (gameResult.includes('Player')) {
-            playerScore++;
-            alert(`${gameResult}\n\nPlayer score: ${playerScore}\n\nComputer score: ${comScore}\n\nPress enter to begin next round.`);
-        } else if (gameResult.includes('Computer')) {
-            comScore++;
-            alert(`${gameResult}\n\nPlayer score: ${playerScore}\n\nComputer score: ${comScore}\n\nPress enter to begin next round.`);
-        } else {
-            alert(`${gameResult}\n\nPress enter to begin next round.`);
-        }
-    }
-
-    if (playerScore > comScore) {
-        alert(`Player wins the game with a total score of ${playerScore}!`);
-    } else if (comScore > playerScore) {
-        alert(`Computer wins the game with a total score of ${comScore}!`);
+function playGame(comSelection, playerSelection) {
+  if (playerSelection === comSelection) {
+    // if tie
+    result.textContent = "It's a tie!";
+  } else if (playerSelection === 'rock') {
+    // if player chooses rock
+    if (comSelection === 'paper') {
+      result.textContent = 'Computer wins! Rock beats paper.';
+      computerScore++;
+      computerScoreBoard.textContent = `Computer Score: ${computerScore.toString()}`;
     } else {
-        alert(`Aaaaaand the game is a tie with both player and computer sharing a score of ${playerScore}.`);
+      result.textContent = 'Player wins! Rock beats scissors.';
+      playerScore++;
+      playerScoreBoard.textContent = `Player Score: ${playerScore.toString()}`;
     }
-
-    // Give user option to play again and repeat game loop if yes
-    let playAgain;
-    do {
-        playAgain = prompt("Do you want to play again? Yes/No: ");
-        playAgain = playAgain.toLowerCase();
-    } while (playAgain !== 'yes' && playAgain !== 'no');
-
-    if (playAgain === 'yes') {
-        game();
+  } else if (playerSelection === 'paper') {
+    // if player chooses paper
+    if (comSelection === 'scissors') {
+      result.textContent = 'Computer wins! Scissors beats paper.';
+      computerScore++;
+      computerScoreBoard.textContent = `Computer Score: ${computerScore.toString()}`;
     } else {
-        alert("Thanks for playing!");
+      result.textContent = 'Player wins! Paper beats rock.';
+      playerScore++;
+      playerScoreBoard.textContent = `Player Score: ${playerScore.toString()}`;
     }
-}
+  } else if (playerSelection === 'scissors') {
+    // if player chooses scissors
+    if (comSelection === 'rock') {
+      result.textContent = 'Computer wins! Rock beats scissors.';
+      computerScore++;
+      computerScoreBoard.textContent = `Computer Score: ${computerScore.toString()}`;
+    } else {
+      result.textContent = 'Player wins! Scissors beats paper.';
+      playerScore++;
+      playerScoreBoard.textContent = `Player Score: ${playerScore.toString()}`;
+    }
+  }
 
+  if (playerScore === 5 || computerScore === 5) {
+    if (playerScore === 5) {
+      result.textContent =
+        'Player has defeated the computer in Rock Paper Scissors!';
+    } else {
+      result.textContent =
+        'Computer has defeated the player in Rock Paper Scissors!';
+    }
+
+    playerScore = 0;
+    computerScore = 0;
+    playerScoreBoard.textContent = `Player Score: ${playerScore.toString()}`;
+    computerScoreBoard.textContent = `Computer Score: ${computerScore.toString()}`;
+  }
+}
